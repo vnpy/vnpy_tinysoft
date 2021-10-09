@@ -27,6 +27,12 @@
 
 注意：需要购买相应的数据服务权限，可以通过[该页面](http://www.tinysoft.com.cn/TSDN/HomePage.tsl)申请试用。
 
+安装包中集成了以下版本的pyTSL：
+
+* Windows 64位 Python 3.7
+* Ubuntu 64位 Python 3.8
+
+如需使用其他版本，请在[天软pyTSL接口](http://www.tinysoft.com.cn/tsdn/helpdoc/display.tsl?id=17395)下载。
 
 ## 安装
 
