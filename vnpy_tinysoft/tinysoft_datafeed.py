@@ -95,6 +95,7 @@ class TinysoftDatafeed(BaseDatafeed):
                     symbol=symbol,
                     exchange=exchange,
                     datetime=CHINA_TZ.localize(dt),
+                    interval=req.interval,
                     open_price=d["open"],
                     high_price=d["high"],
                     low_price=d["low"],
