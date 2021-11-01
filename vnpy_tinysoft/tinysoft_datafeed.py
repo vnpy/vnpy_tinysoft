@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from typing import List, Optional
 from pytz import timezone
 
@@ -176,5 +176,6 @@ class TinysoftDatafeed(BaseDatafeed):
                     ticks.append(tick)
 
             dt += timedelta(days=1)
+            dt: datetime = dt.astimezone(CHINA_TZ)
 
         return ticks
