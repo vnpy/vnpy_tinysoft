@@ -87,7 +87,7 @@ class TinysoftDatafeed(BaseDatafeed):
             shift = SHIFT_MAP.get(req.interval, None)
 
             for d in data:
-                dt = DoubleToDatetime(d["date"])
+                dt: datetime = DoubleToDatetime(d["date"])
                 if shift:
                     dt -= shift
 
@@ -123,7 +123,7 @@ class TinysoftDatafeed(BaseDatafeed):
 
         ticks: List[TickData] = []
 
-        dt = req.start
+        dt: datetime = req.start
         while dt <= req.end:
             date_str = dt.strftime("%Y%m%d")
             cmd = f"return select * from tradetable datekey {date_str}T to {date_str}T+16/24 of '{tsl_exchange}{symbol}' end ; "
