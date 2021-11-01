@@ -133,12 +133,13 @@ class TinysoftDatafeed(BaseDatafeed):
                 data = result.value()
                 for d in data:
                     dt = DoubleToDatetime(d["date"])
+                    dt = CHINA_TZ.localize(dt)
 
                     tick = TickData(
                         symbol=symbol,
                         exchange=exchange,
                         name=d["StockName"],
-                        datetime=CHINA_TZ.localize(dt),
+                        datetime=dt,
                         open_price=d["sectional_open"],
                         high_price=d["sectional_high"],
                         low_price=d["sectional_low"],
@@ -176,6 +177,5 @@ class TinysoftDatafeed(BaseDatafeed):
                     ticks.append(tick)
 
             dt += timedelta(days=1)
-            dt: datetime = dt.astimezone(CHINA_TZ)
 
         return ticks
