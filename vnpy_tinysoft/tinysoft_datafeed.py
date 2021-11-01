@@ -176,6 +176,6 @@ class TinysoftDatafeed(BaseDatafeed):
                     ticks.append(tick)
 
             dt += timedelta(days=1)
-            dt: datetime = CHINA_TZ.localize(dt)
+            dt: datetime = dt.astimezone(CHINA_TZ)
 
         return ticks
