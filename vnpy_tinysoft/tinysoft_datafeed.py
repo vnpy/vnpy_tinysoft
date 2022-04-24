@@ -74,7 +74,7 @@ class TinysoftDatafeed(BaseDatafeed):
         start_str: str = req.start.strftime("%Y%m%d")
         end_str: str = req.end.strftime("%Y%m%d")
 
-        cmd = (
+        cmd: str = (
             f"setsysparam(pn_cycle(),{tsl_interval}());"
             "return select * from markettable "
             f"datekey {start_str}T to {end_str}T "
