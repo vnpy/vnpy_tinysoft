@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import List, Optional
+from typing import Dict, List, Optional
 from pytz import timezone
 
 from vnpy.trader.setting import SETTINGS
@@ -11,23 +11,23 @@ from vnpy.trader.datafeed import BaseDatafeed
 from .pyTSL import Client, DoubleToDatetime
 
 
-CHINA_TZ = timezone("Asia/Shanghai")
-
-EXCHANGE_MAP = {
+EXCHANGE_MAP: Dict[Exchange, str] = {
     Exchange.SSE: "SH",
     Exchange.SZSE: "SZ"
 }
 
-INTERVAL_MAP = {
+INTERVAL_MAP: Dict[Interval, str] = {
     Interval.MINUTE: "cy_1m",
     Interval.HOUR: "cy_60m",
     Interval.DAILY: "cy_day",
 }
 
-SHIFT_MAP = {
+SHIFT_MAP: Dict[Interval, timedelta] = {
     Interval.MINUTE: timedelta(minutes=1),
     Interval.HOUR: timedelta(hours=1),
 }
+
+CHINA_TZ = timezone("Asia/Shanghai")
 
 
 class TinysoftDatafeed(BaseDatafeed):
@@ -53,7 +53,7 @@ class TinysoftDatafeed(BaseDatafeed):
             443
         )
 
-        n = self.client.login()
+        n: int = self.client.login()
         if n != 1:
             return False
 
@@ -66,15 +66,15 @@ class TinysoftDatafeed(BaseDatafeed):
             self.init()
 
         symbol, exchange = extract_vt_symbol(req.vt_symbol)
-        tsl_exchange = EXCHANGE_MAP.get(exchange, "")
-        tsl_interval = INTERVAL_MAP[req.interval]
+        tsl_exchange: str = EXCHANGE_MAP.get(exchange, "")
+        tsl_interval: str = INTERVAL_MAP[req.interval]
 
         bars: List[BarData] = []
 
-        start_str = req.start.strftime("%Y%m%d")
-        end_str = req.end.strftime("%Y%m%d")
+        start_str: str = req.start.strftime("%Y%m%d")
+        end_str: str = req.end.strftime("%Y%m%d")
 
-        cmd = (
+        cmd: str = (
             f"setsysparam(pn_cycle(),{tsl_interval}());"
             "return select * from markettable "
             f"datekey {start_str}T to {end_str}T "
@@ -84,14 +84,14 @@ class TinysoftDatafeed(BaseDatafeed):
 
         if not result.error():
             data = result.value()
-            shift = SHIFT_MAP.get(req.interval, None)
+            shift: timedelta = SHIFT_MAP.get(req.interval, None)
 
             for d in data:
                 dt: datetime = DoubleToDatetime(d["date"])
                 if shift:
                     dt -= shift
 
-                bar = BarData(
+                bar: BarData = BarData(
                     symbol=symbol,
                     exchange=exchange,
                     datetime=CHINA_TZ.localize(dt),
@@ -119,23 +119,23 @@ class TinysoftDatafeed(BaseDatafeed):
             self.init()
 
         symbol, exchange = extract_vt_symbol(req.vt_symbol)
-        tsl_exchange = EXCHANGE_MAP.get(exchange, "")
+        tsl_exchange: str = EXCHANGE_MAP.get(exchange, "")
 
         ticks: List[TickData] = []
 
         dt: datetime = req.start
         while dt <= req.end:
-            date_str = dt.strftime("%Y%m%d")
-            cmd = f"return select * from tradetable datekey {date_str}T to {date_str}T+16/24 of '{tsl_exchange}{symbol}' end ; "
+            date_str: str = dt.strftime("%Y%m%d")
+            cmd: str = f"return select * from tradetable datekey {date_str}T to {date_str}T+16/24 of '{tsl_exchange}{symbol}' end ; "
             result = self.client.exec(cmd)
 
             if not result.error():
                 data = result.value()
                 for d in data:
-                    dt = DoubleToDatetime(d["date"])
-                    dt = CHINA_TZ.localize(dt)
+                    dt: datetime = DoubleToDatetime(d["date"])
+                    dt: datetime = CHINA_TZ.localize(dt)
 
-                    tick = TickData(
+                    tick: TickData = TickData(
                         symbol=symbol,
                         exchange=exchange,
                         name=d["StockName"],
