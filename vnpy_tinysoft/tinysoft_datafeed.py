@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional
+from typing import Dict, List, Set, Optional
 from pytz import timezone
 
 from vnpy.trader.setting import SETTINGS
@@ -122,6 +122,7 @@ class TinysoftDatafeed(BaseDatafeed):
         tsl_exchange: str = EXCHANGE_MAP.get(exchange, "")
 
         ticks: List[TickData] = []
+        dts: Set[datetime] = set()
 
         dt: datetime = req.start
         while dt <= req.end:
@@ -134,6 +135,11 @@ class TinysoftDatafeed(BaseDatafeed):
                 for d in data:
                     dt: datetime = DoubleToDatetime(d["date"])
                     dt: datetime = CHINA_TZ.localize(dt)
+
+                    # 解决期货缺失毫秒时间戳的问题
+                    if dt in dts:
+                        dt = dt.replace(microsecond=500000)
+                    dts.add(dt)
 
                     tick: TickData = TickData(
                         symbol=symbol,
