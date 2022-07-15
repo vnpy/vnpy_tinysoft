@@ -2,13 +2,13 @@ from datetime import datetime, timedelta
 from typing import Dict, List, Set, Optional
 from pytz import timezone
 
+from pyTSL import Client, DoubleToDatetime
+
 from vnpy.trader.setting import SETTINGS
 from vnpy.trader.constant import Exchange, Interval
 from vnpy.trader.object import BarData, TickData, HistoryRequest
 from vnpy.trader.utility import extract_vt_symbol
 from vnpy.trader.datafeed import BaseDatafeed
-
-from .pyTSL import Client, DoubleToDatetime
 
 
 EXCHANGE_MAP: Dict[Exchange, str] = {
