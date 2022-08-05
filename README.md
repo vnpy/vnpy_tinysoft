@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-    <img src ="https://img.shields.io/badge/version-2021.6.17.2-blueviolet.svg"/>
+    <img src ="https://img.shields.io/badge/version-2022.8.5-blueviolet.svg"/>
     <img src ="https://img.shields.io/badge/platform-windows|linux-yellow.svg"/>
     <img src ="https://img.shields.io/badge/python-3.7-blue.svg" />
     <img src ="https://img.shields.io/github/license/vnpy/vnpy.svg?color=orange"/>
@@ -13,7 +13,7 @@
 
 ## 说明
 
-基于天软pyTSL接口的2021.6.17版本开发，支持以下中国金融市场的K线和Tick数据：
+基于天软pyTSL接口的1.2版本开发，支持以下中国金融市场的K线和Tick数据：
 
 * 期货和期货期权：
   * CFFEX：中国金融期货交易所
@@ -26,11 +26,6 @@
   * SZSE：深圳证券交易所
 
 注意：需要购买相应的数据服务权限，可以通过[该页面](http://www.tinysoft.com.cn/TSDN/HomePage.tsl)申请试用。
-
-安装包中集成了以下版本的pyTSL：
-
-* Windows 64位 Python 3.7
-* Ubuntu 64位 Python 3.8
 
 如需使用其他版本，请在[天软pyTSL接口](http://www.tinysoft.com.cn/tsdn/helpdoc/display.tsl?id=17395)下载。
 
