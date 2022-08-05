@@ -1,13 +1,12 @@
 from datetime import datetime, timedelta
 from typing import Dict, List, Set, Optional
-from pytz import timezone
 
 from pyTSL import Client, DoubleToDatetime
 
 from vnpy.trader.setting import SETTINGS
 from vnpy.trader.constant import Exchange, Interval
 from vnpy.trader.object import BarData, TickData, HistoryRequest
-from vnpy.trader.utility import extract_vt_symbol
+from vnpy.trader.utility import extract_vt_symbol, ZoneInfo
 from vnpy.trader.datafeed import BaseDatafeed
 
 
@@ -27,7 +26,7 @@ SHIFT_MAP: Dict[Interval, timedelta] = {
     Interval.HOUR: timedelta(hours=1),
 }
 
-CHINA_TZ = timezone("Asia/Shanghai")
+CHINA_TZ = ZoneInfo("Asia/Shanghai")
 
 
 class TinysoftDatafeed(BaseDatafeed):
@@ -94,7 +93,7 @@ class TinysoftDatafeed(BaseDatafeed):
                 bar: BarData = BarData(
                     symbol=symbol,
                     exchange=exchange,
-                    datetime=CHINA_TZ.localize(dt),
+                    datetime=dt.replace(tzinfo=CHINA_TZ),
                     interval=req.interval,
                     open_price=d["open"],
                     high_price=d["high"],
@@ -134,7 +133,7 @@ class TinysoftDatafeed(BaseDatafeed):
                 data = result.value()
                 for d in data:
                     dt: datetime = DoubleToDatetime(d["date"])
-                    dt: datetime = CHINA_TZ.localize(dt)
+                    dt: datetime = dt.replace(tzinfo=CHINA_TZ)
 
                     # 解决期货缺失毫秒时间戳的问题
                     if dt in dts:
