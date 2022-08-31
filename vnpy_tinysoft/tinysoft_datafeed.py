@@ -179,6 +179,12 @@ class TinysoftDatafeed(BaseDatafeed):
                     if not tsl_exchange:
                         tick.open_interest = d["sectional_cjbs"]
 
+                    # 基金获取IOPV字段
+                    if d["syl2"]:
+                        tick.extra = {
+                            "iopv": d["syl2"]
+                        }
+
                     ticks.append(tick)
 
             dt += timedelta(days=1)
