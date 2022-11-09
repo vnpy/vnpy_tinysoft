@@ -181,9 +181,11 @@ class TinysoftDatafeed(BaseDatafeed):
 
                     # 基金获取IOPV字段
                     if d["syl2"]:
-                        tick.extra = {
-                            "iopv": d["syl2"]
-                        }
+                        iopv: float = d["syl2"]
+                        if exchange == Exchange.SZSE:       # 深交所的IOPV要除以100才是每股
+                            iopv /= 100
+
+                        tick.extra = {"iopv": iopv}
 
                     ticks.append(tick)
 
