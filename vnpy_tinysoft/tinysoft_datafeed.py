@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Dict, List, Set, Optional
+from typing import Dict, List, Set, Optional, Callable
 
 from pyTSL import Client, DoubleToDatetime
 
@@ -40,7 +40,7 @@ class TinysoftDatafeed(BaseDatafeed):
         self.client: Client = None
         self.inited: bool = False
 
-    def init(self) -> bool:
+    def init(self, output: Callable = print) -> bool:
         """初始化"""
         if self.inited:
             return True
@@ -54,15 +54,18 @@ class TinysoftDatafeed(BaseDatafeed):
 
         n: int = self.client.login()
         if n != 1:
+            output("天软数据服务初始化失败：用户名密码错误！")
             return False
 
         self.inited = True
         return True
 
-    def query_bar_history(self, req: HistoryRequest) -> Optional[List[BarData]]:
+    def query_bar_history(self, req: HistoryRequest, output: Callable = print) -> Optional[List[BarData]]:
         """查询K线数据"""
         if not self.inited:
-            self.init()
+            n: bool = self.init(output)
+            if not n:
+                return []
 
         symbol, exchange = extract_vt_symbol(req.vt_symbol)
         tsl_exchange: str = EXCHANGE_MAP.get(exchange, "")
@@ -112,10 +115,12 @@ class TinysoftDatafeed(BaseDatafeed):
 
         return bars
 
-    def query_tick_history(self, req: HistoryRequest) -> Optional[List[TickData]]:
+    def query_tick_history(self, req: HistoryRequest, output: Callable = print) -> Optional[List[TickData]]:
         """查询Tick数据"""
         if not self.inited:
-            self.init()
+            n: bool = self.init(output)
+            if not n:
+                return []
 
         symbol, exchange = extract_vt_symbol(req.vt_symbol)
         tsl_exchange: str = EXCHANGE_MAP.get(exchange, "")
